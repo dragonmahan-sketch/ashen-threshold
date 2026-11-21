@@ -1,50 +1,97 @@
 # The Ashen Threshold
 
-A small top-down souls-like that runs in the browser and installs to a phone's home
-screen. The whole game — art, enemies, bosses — is one file: `index.html`.
+A small top-down souls-like that runs in a browser and installs to a phone's home
+screen. Everything — the art, the enemies, the bosses — is in one file: `index.html`.
 
-**Live site:** https://dragonmahan-sketch.github.io/ashen-threshold/
+## What is in this folder
 
-## How this repository publishes
+| File | What it is |
+| --- | --- |
+| `index.html` | the whole game |
+| `sw.js` | the offline cache, so it works with no signal |
+| `manifest.webmanifest` | the name, colours and icons the phone uses |
+| `icon-192.png`, `icon-512.png` | home-screen icons |
+| `apple-touch-icon.png` | the icon iPhone uses |
 
-`index.html` and the three icons are pulled in when the site is built, by
-`.github/workflows/pages.yml`, from the game's original home:
+## Play it on a computer
 
-    https://the-ashen-threshold-vkpikx.freebuff.site
+Double-click `index.html`. It opens in your browser and plays straight away.
+(The offline part only works on a real web address, not from a local file — that is normal.)
 
-That is because the game is a single 145 KB file, larger than can be committed through
-the tool that set this repository up. `sw.js` and `manifest.webmanifest` live here.
+## Put it online with GitHub Pages (free)
 
-### To make the repository self-contained
+1. Sign in at github.com and click **New repository**.
+2. Name it something like `ashen-threshold`, leave it **Public**, click **Create repository**.
+3. On the new page click **Add file → Upload files**, drag **every file in this folder**
+   into the window (file and folder names must stay exactly as they are, all at the top
+   level — do not put them inside another folder), then click **Commit changes**.
+4. Go to **Settings → Pages**. Under **Source** choose **Deploy from a branch**,
+   then Branch: **main**, folder: **/ (root)**, and click **Save**.
+5. Wait a minute or two, reload the Settings → Pages page. Your game will be at:
+   `https://YOUR-USERNAME.github.io/ashen-threshold/`
 
-1. Download `index.html`, `icon-192.png`, `icon-512.png` and `apple-touch-icon.png`
-   from the live site above.
-2. In this repository use **Add file → Upload files** and commit them at the top level.
-3. Delete `.github/workflows/pages.yml`, then in **Settings → Pages** set
-   **Source** to **Deploy from a branch**, branch **main**, folder **/ (root)**.
+If that address shows "404" at first, it just means GitHub is still building it —
+reload after another minute.
 
-From then on GitHub serves the files exactly as they are, with no build step, and you
-can edit `index.html` directly in the repository.
+## Put it on an iPhone home screen
 
-## On an iPhone
+The game tells you this itself: the first time it opens in Safari, the start screen
+shows the three steps below plus the no-signal test. Press **H** on a keyboard to bring
+that screen back.
 
-1. Open the live site in **Safari** and let it load into the game (five to ten seconds
-   the first time).
-2. **Share** → **Add to Home Screen** → **Add**.
-3. Open it once from the new icon while online.
+Use **Safari** for this. Chrome on iPhone cannot add web apps to the home screen properly.
 
-### Checking the offline copy is saved
+1. Open Safari and go to your address, e.g.
+   `https://YOUR-USERNAME.github.io/ashen-threshold/`
+2. Let it load all the way into the game — you should see the burning bonfire in the
+   hall. Give it five to ten seconds on that first visit: the offline files are saved
+   while the page sits there.
+3. Tap the **Share** button at the bottom of the screen (a square with an arrow coming
+   out of the top).
+4. In the sheet that slides up, scroll down and tap **Add to Home Screen**.
+5. Name it whatever you like — "Ashen" is what the game asks for — and tap **Add**.
 
-Close the game, turn on **Airplane Mode**, then tap the icon again. If the game loads,
-the offline copy is saved. If Safari says it can't open the page, reopen the site with
-signal, wait ten seconds, and add it to the home screen again.
+Now tap the new icon on your home screen (not Safari) once while you are still online,
+let the game appear, and play for a few seconds. That first launch from the icon is what
+finishes setting up the standalone app and its offline files.
+
+On Android the same idea works in Chrome: menu (three dots) → **Add to Home screen**.
+
+## Checking the offline copy is really saved
+
+1. With the game open from its home-screen icon, close it by swiping up from the bottom
+   of the screen.
+2. Turn on **Airplane Mode**: swipe down from the top-right corner for Control Centre
+   and tap the plane icon.
+3. Tap the game icon again.
+
+- **The game loads and plays** → the offline copy is saved, and you are done. Turn
+  Airplane Mode back off.
+- **A page says Safari cannot open the page because the iPhone is not connected to the
+  internet** → it was not saved yet. The usual cause is that the first visit, or the
+  first launch from the icon, did not finish.
+
+To fix that: turn Airplane Mode off, delete the home-screen icon, open the address in
+Safari again, wait a good ten seconds on the game, then add it to the home screen again
+and launch it once from the icon while online.
+
+## Good to know
+
+- The saved copy only refreshes when you open the game **while online**. After you
+  upload a changed game, open it once with signal.
+- iOS can clear saved offline data for apps it has not used in a long time, or when the
+  phone is very low on storage. One online open fixes it.
 
 ## Changing the game
 
-After uploading a changed `index.html`, open `sw.js` and bump the version:
+Open `index.html` in any text editor. Code, colours, enemy numbers and level layout are
+all inside it.
+
+When you upload a changed game, also open `sw.js` and change the version line:
 
 ```js
-const CACHE = 'ashen-threshold-v23';   // → v24, v25, ...
+const CACHE = 'ashen-threshold-v24';   // → v25, v26, ...
 ```
 
-Otherwise a phone can keep showing its saved copy.
+That tells phones to throw away their saved copy and download the new one. Without it
+a phone can keep showing the old version.
