@@ -1,5 +1,5 @@
 // Caches the game so the home-screen app works with no signal.
-const CACHE = 'ashen-threshold-v23';
+const CACHE = 'ashen-threshold-v24';
 const ASSETS = [
   './',
   './manifest.webmanifest',
