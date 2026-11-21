@@ -1,0 +1,54 @@
+name: Publish to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Assemble the site
+        env:
+          SOURCE: https://the-ashen-threshold-vkpikx.freebuff.site
+        run: |
+          set -euo pipefail
+          mkdir -p site
+          curl -fsSL "$SOURCE/" -o site/index.html
+          for f in icon-192.png icon-512.png apple-touch-icon.png; do
+            curl -fsSL "$SOURCE/$f" -o "site/$f"
+          done
+          cp sw.js manifest.webmanifest site/
+          ls -la site
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
